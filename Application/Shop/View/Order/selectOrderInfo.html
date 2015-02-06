@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link type="text/css" rel="stylesheet" href="__PUBLIC__/Admin/Css/style.css"/>
+    <link type="text/css" rel="stylesheet" href="__PUBLIC__/Admin/Css/easydialog.css"/>
+    <script type="text/javascript" src="__PUBLIC__/Admin/Js/jquery.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/Js/easydialog.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/Js/selectOrder.js"></script>
+    <link type="text/css" rel="stylesheet" href="__PUBLIC__/Admin/Css/selectOrder.css"/>
+    <title>无标题文档</title>
+</head>
+<body>
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="/index.php/Shop/Index/index">首页</a></li>
+        <li><a href="#">订单信息查询页面</a></li>
+    </ul>
+</div>
+<div class="mainindex">
+    <div class="welinfo">
+ <form action="/index.php/Shop/Order/showOrderInfo" method="post" name="orderInfoFrm" id="orderInfoFrm">
+<span style="color: green">请输入需要查询的订单编号或订单号：&nbsp;
+<notempty name="id"><input type="text" id="order" name="id" class="select_id" value="{$id}" maxlength="20">
+    <else/><input type="text" name="id" id="order1" class="select_id"  maxlength="20"></notempty>
+    <input type="submit" class="blue small" name="btn" value="确认输入"><b style="color: #ff0000;">&nbsp;&nbsp;(所有图片均可点击查看正常尺寸图片)</b><input type=button class="blue small" name='button_export' title='打印' onclick=preview(1) value="打印订单信息" /></span>
+    </form>
+    </div>
+    <div>
+        <form action="/index.php/Shop/Order/changeStatus" method="post" name="changeStatusFrm" id="changeStatusFrm">
+            <span style="color: blue">当前订单状态：<b style="color: #ff0000;font-size: 20px">{$order.status}</b>&nbsp;&nbsp;
+                <span style="color: blue">预计订单状态状态：<b style="color: #ff0000;font-size: 20px">{$order.would_status}</b>&nbsp;&nbsp;
+                <b>订单状态更新：</b></span>
+            <select class="btn-select" name="statusChange" id="statusChange">
+                <option value="1">确认照片</option>
+                <option value="2">建模</option>
+                <option value="3">打印</option>
+                <option value="4">发送</option>
+                <option value="5">退货</option>
+                <option value="6">换货</option>
+                <option value="7">完成</option>
+                <option value="8">图片驳回</option>
+            </select>
+            <input type="button" class="blue small" name="btn" onclick="changeStatus()" value="确定更新">
+        </form>
+    </div>
+    <!--startprint1-->
+    <div class="xline"></div>
+    <b style="margin-top: 10px ;color: #ff0000">订单详细信息：</b>
+    <div class="tablelist th" style="margin-top: 20px;margin-bottom: 20px;">
+        <table class="tablelist">
+            <thead>
+            <tr>
+                <th width="2%"><input name="" type="checkbox" value="" checked="checked"/></th>
+                <th width="5%">编号<i class="sort"><img src="__PUBLIC__/Admin/Images/images/px.gif" /></i></th>
+                <th width="12%">订单号</th>
+                <th width="10%">用户手机</th>
+                <th width="15%">商品数量</th>
+                <th width="15%">订单备注</th>
+                <th width="8%">发货状态</th>
+                <th width="5%">退货状态</th>
+                <th width="8%">下单时间</th>
+                <th width="15%">状态改变时间</th>
+                <th width="5%">其他</th>
+            </tr>
+            </thead>
+            <notempty name="order">
+                <tbody>
+                <tr >
+                    <td><input name="id" type="checkbox" value="{$order.orderId}" /></td>
+                    <td ><input type="hidden" name="orderId" id="orderId" value="{$order.orderId}"/>{$order.orderId}</td>
+                    <td >{$order.order_num}</td>
+                    <td>{$order.mobile}</td>
+                    <td>商品样式：{$order.total_type}种，商品总数：{$order.goods_count}</td>
+                    <td>{$order.order_desc}</td>
+                    <notempty name="order.posted"><td>已发货</td><else/><td style="color: #ff0000">未发货</td></notempty>
+                    <notempty name="order.return_status"><td style="color: #ff0000">退货中</td><else/><td>无需退货</td></notempty>
+                    <notempty name="order.cTime"><td>{$order.cTime|date="Y-m-d H:i",###}</td><else/><td></td></notempty>
+                    <notempty name="order.status_time"><td>当前：<b style="color: #ff0000">{$order.status}</b>&nbsp;&nbsp;时间：{$order.status_time|date="Y-m-d H:i",###}</td><else/><td></td></notempty>
+                    <td>&nbsp;</td>
+                </tr>
+                </tbody>
+            </notempty>
+        </table>
+    </div>
+    <div class="xline"></div>
+    <b style="margin-top: 10px ;color: #ff0000">邮递详细信息：</b>
+    <div class="tablelist th" style="margin-top: 20px;margin-bottom: 20px;">
+        <table class="tablelist">
+            <thead>
+            <tr>
+                <th width="2%"><input name="" type="checkbox" value="" checked="checked"/></th>
+                <th width="5%">编号<i class="sort"><img src="__PUBLIC__/Admin/Images/images/px.gif" /></i></th>
+                <th width="10%">收件人姓名</th>
+                <th width="7%">收货省</th>
+                <th width="6%">城市</th>
+                <th width="7%">区域</th>
+                <th width="10%">详细信息</th>
+                <th width="5%">邮编</th>
+                <th width="10%">收货人手机号</th>
+                <th width="10%">固定电话</th>
+                <th width="10%">发送时间</th>
+                <th width="20%">快递单号</th>
+            </tr>
+            </thead>
+            <notempty name="post">
+                <tbody>
+                <tr >
+                    <td><input name="id" id="bid" type="checkbox" value="{$post.postId}" /></td>
+                    <td >{$post.postId}</td>
+                    <td >{$post.pName}</td>
+                    <td>{$post.province}</td>
+                    <td>{$post.city}</td>
+                    <td>{$post.zone}</td>
+                    <td>{$post.addr}</td>
+                    <td>{$post.postNum}</td>
+                    <td>{$post.pMobile}</td>
+                    <td>{$post.pTel}</td>
+                    <notempty name="post.posted_time"><td>{$post.posted_time|date="Y-m-d H:i",###}</td><else/><td style="color: #ff0000">未发货</td></notempty>
+                    <notempty name="post.posted_num"><td>{$post.posted_num}&nbsp;&nbsp;<a href="javascript:" onclick="changePostNum()" id="changePostNum" style="color: #ff0000;font-size: 14px" >修改</a></td><else/><td style="color: #ff0000">无发货信息&nbsp;&nbsp;<a href="javascript:" onclick="sendGood()" id="sendGoods" style="font-size: 14px;">发货</a></td></notempty>
+                </tr>
+                </tbody>
+            </notempty>
+        </table>
+    </div>
+
+    <div class="xline"></div>
+    <b style="margin-top: 10px;color: #ff0000">商品详细信息：</b>
+    <div class="tablelist th" style="margin-top: 20px;margin-bottom: 20px;">
+        <table class="tablelist">
+            <thead>
+            <tr>
+                <th  width="2%"><input name="" type="checkbox" value="" checked="checked"/></th>
+                <th  width="5%">编号<i class="sort"><img src="__PUBLIC__/Admin/Images/images/px.gif" /></i></th>
+                <th  width="15%">头饰</th>
+                <th  width="15%">身体</th>
+                <th  width="5%">数量</th>
+                <th  width="8%">大小样式</th>
+                <th  width="15%">用户商品图</th>
+                <th  width="10%">确认时间</th>
+                <th  width="15%">商品描述</th>
+                <th  width="10%">其他信息</th>
+            </tr>
+            </thead>
+            <notempty name="good">
+                <tbody>
+                <foreach name="good" item="vo" key="key">
+                    <tr class="table_img">
+                        <td><input name="id" type="checkbox" value="{$vo.pid}" /></td>
+                        <td>{$vo.pid}</td>
+                        <td class="table_img"><a href="{$vo['hd_image']['url']}" target="_blank"><img src="{$vo['hd_image']['url']}"/></a></td>
+                        <td class="table_img"><a href="{$vo['bd_image']['url']}" target="_blank"><img src="{$vo['bd_image']['url']}"/></a></td>
+                        <td>{$vo.num}</td>
+                        <td>{$vo.size}</td>
+                        <notempty name="vo.user_model"><td class="table_img"><a href="{$vo.user_model}" target="_blank"><img src="{$vo.user_model}"/></a></td><else/>
+                        <td>&nbsp;</td></notempty>
+                        <td>{$vo.cTime|date="Y-m-d H:i",###}</td>
+                        <td>{$vo.good_desc}</td>
+                        <td>{$vo.good_content}</td>
+                    </tr>
+                </foreach>
+                </tbody>
+            </notempty>
+        </table>
+    </div>
+    <div class="xline"></div>
+    <b style="margin-top: 10px;color: #ff0000">用户头像信息：</b>
+    <div class="tablelist th" style="margin-top: 20px;margin-bottom: 20px;">
+        <table class="tablelist">
+            <thead>
+            <tr>
+                <th width="2%"><input name="" type="checkbox" value="" checked="checked"/></th>
+                <th width="5%">编号<i class="sort"><img src="__PUBLIC__/Admin/Images/images/px.gif" /></i></th>
+                <th width="27%">第一张</th>
+                <th width="27%">第二张</th>
+                <th width="27%">第三张</th>
+                <th width="12%">图片审核</th>
+            </tr>
+            </thead>
+            <notempty name="image">
+                <tbody>
+                    <tr class="table_img">
+                        <td><input name="id" type="checkbox" value="1" /></td>
+                            <td>{$image.uid}</td>
+                        <notempty name="image.1"><td class="table_img"><a href="{$image.1}" target="_blank"><img src="{$image.1}"/></a></td><else/>
+                            <td>无图片信息</td></notempty>
+                        <notempty name="image.2"><td class="table_img"><a href="{$image.2}" target="_blank"><img src="{$image.2}"/></a></td><else/>
+                            <td>无图片信息</td></notempty>
+                        <notempty name="image.3"><td class="table_img"><a href="{$image.3}" target="_blank"><img src="{$image.3}"/></a></td><else/>
+                            <td>无图片信息</td></notempty>
+                        <td><input type="submit" class="blue small" name="confirmBack" data="{$vo.pid}" onclick="javascript:if(confirm('确实通过审核该用户图片吗?'))confirmUserImage(1);" value="审核通过">
+                            <input type="submit" class="blue small" name="cancelBack" onclick="javascript:if(confirm('确实驳回该用户图片吗?'))confirmUserImage(0);" value="图片驳回"/>
+                           <br />&nbsp;&nbsp;&nbsp;&nbsp;<a href="/index.php/Shop/Order/packageZip/orderId/{$order.orderId}" class="blue small" name="cancelBack">打包下载订单图片信息</a></td>
+                    </tr>
+                </tbody>
+            </notempty>
+        </table>
+    </div>
+    <!--endprint1-->
+<!--隐藏的div，随意修改-->
+<div class="easyDialog_wrapper" id="easyDialogWrapper" >
+    <div class="easyDialog_content">
+        <h4 class="easyDialog_title" id="easyDialogTitle">
+            <a href="javascript:void(0)" title="关闭窗口" class="close_btn" id="closeBtn">&times;</a>
+            弹出层标题
+        </h4>
+            <form action="/index.php/Shop/Order/addPostNum" method="post" id="addPostInfoForm">
+                <input type="hidden" name="orderId" id="orderId" value="{$order.orderId}"/>
+                <span style="color: green; margin: 5px;">在此输入快递单号</span>
+                <notempty name="order.posted"><input type="hidden" id="type" name="type"  value="1">
+                    <else/><input type="hidden" name="type" id="type" value="0"></notempty>
+                <input type="text" class="select_id" name="post" id="post"  maxlength="20">
+            </form>
+        <div style="clear: both; height: 20px;"></div>
+        <div class="easyDialog_footer">
+            <button class="btn_normal" id="easyDialogNoBtn" onclick="easyDialog.close()">取消</button>
+            <button class="btn_highlight" onclick="addPostInfo()" id="easyDialogYesBtn">确定</button>
+        </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

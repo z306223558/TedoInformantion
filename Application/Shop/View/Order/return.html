@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link type="text/css" rel="stylesheet" href="__PUBLIC__/Admin/Css/style.css"/>
+<script type="text/javascript" src="__PUBLIC__/Admin/Js/jquery.js"></script>
+<link type="text/css" rel="stylesheet" href="__PUBLIC__/Admin/Css/selectOrder.css"/>
+<title>无标题文档</title>
+<script language="javascript">
+function confirmReturn($key) {
+var bid = document.getElementById("bid").value;
+$.ajax({
+url:"__MODULE__/Order/confirmReturn",
+type:"post",
+data:{
+bid : bid,
+pid : $key
+},
+dataType:'json',
+success:function(msg){
+if(msg == 200)
+{
+if(confirm('caozuochenggong'))
+{
+var orderId = document.getElementById("orderId").value;
+$("#order").val(orderId);
+$("#order1").val(orderId);
+document.getElementById('returnOrderInfoFrm').submit();
+}
+}
+else
+{
+if(confirm('shibai'))
+{
+return false;
+}
+}
+
+}
+
+})
+}
+</script>
+</head>
+
+<body>
+<div class="place">
+<span>位置：</span>
+<ul class="placeul">
+<li><a href="/index.php/Shop/Index/index.html">首页</a></li>
+<li><a href="#">退货管理页面</a></li>
+</ul>
+</div>
+<div class="mainindex">
+<div class="welinfo">
+<form action="/index.php/Shop/Order/returnOrder" method="post" name="returnOrderInfoFrm" id="returnOrderInfoFrm">
+<span style="color: green">请输入订单号来查看退货信息：&nbsp;
+<notempty name="id"><input type="text" id="order" name="id" class="select_id" value="{$id}" maxlength="20">
+<else/><input type="text" name="id" id="order1" class="select_id"  maxlength="20"></notempty>
+<input type="submit" class="blue small" name="btn" value="确认输入"></span><b>&nbsp;&nbsp;(所有图片均可点击查看正常尺寸图片)</b>
+</form>
+</div>
+<div class="xline"></div>
+<b style="margin-top: 10px ;color: #ff0000">退货详细信息：</b>
+<div class="tablelist th" style="margin-top: 20px;margin-bottom: 20px;">
+<table class="tablelist">
+<thead>
+<tr>
+<th width="3%"><input name="" type="checkbox" value="" checked="checked"/></th>
+<th  width="5%">退货ID<i class="sort"><img src="__PUBLIC__/Admin/Images/images/px.gif" /></i></th>
+<th width="12%">订单编号</th>
+<th  width="10%">订单号</th>
+<th width="5%">退货人</th>
+<th width="15%">退货地址</th>
+<th  width="10%">退货快递单号</th>
+<th  width="5%">退货快递公司</th>
+<th  width="10%">退货时间</th>
+<th  width="5%">退货类型</th>
+<th  width="5%">可换</th>
+<th  width="15%">退换货备注</th>
+</tr>
+</thead>
+<notempty name="data">
+<tbody>
+<tr >
+<td><input name="id" id="bid" type="checkbox" value="{$data.rid}" /></td>
+<td >{$data.rid}</td>
+<td ><input type="hidden" id="orderId" name="orderId" value="{$data.orderId}"/>{$data.orderId}</td>
+<td>{$data.order_num}</td>
+<td>{$data.pName}</td>
+<td>{$data.addr}</td>
+<td>{$data.return_post_num}</td>
+<td>{$data.company}</td>
+<td>{$data.cTime|date="Y-m-d H:i",###}</td>
+<td>{$data.return_type}</td>
+<td>{$data.changeable}</td>
+<td>{$data.content}</td>
+</tr>
+</tbody>
+</notempty>
+</table>
+</div>
+<div class="xline"></div>
+<b style="margin-top: 10px;color: #ff0000">退货商品详细信息：</b>
+<div class="tablelist th" style="margin-top: 20px;margin-bottom: 20px;">
+<table class="tablelist">
+<thead>
+<tr>
+<th width="3%"><input name="" type="checkbox" value="" checked="checked"/></th>
+<th  width="5%">商品ID<i class="sort"><img src="__PUBLIC__/Admin/Images/images/px.gif" /></i></th>
+<th width="12%">头饰</th>
+<th  width="10%">身体</th>
+<th width="5%">数量</th>
+<th width="15%">大小样式</th>
+<th  width="15%">用户商品图</th>
+<th  width="10%">确认时间</th>
+<th  width="5%">退货包含</th>
+<th  width="5%">可换与否</th>
+<th  width="15%">操作</th>
+</tr>
+</thead>
+<notempty name="good">
+<tbody>
+<foreach name="good" item="vo" key="key">
+<tr class="table_img">
+<td><input name="id" id="pid_{$key}" type="checkbox" value="{$vo.pid}" /></td>
+<td>{$vo.pid}</td>
+<td><a href="{$vo['hd_image']['url']}" target="_blank"><img src="{$vo['hd_image']['url']}"/></a></td>
+<td><a href="{$vo['bd_image']['url']}" target="_blank"><img src="{$vo['bd_image']['url']}"/></a></td>
+<td>{$vo.num}</td>
+<td>{$vo.size}</td>
+<notempty name="vo.user_model"><td><a href="{$vo.user_model}" target="_blank"><img src="{$vo.user_model}"/></a></td><else/>
+<td>&nbsp;</td></notempty>
+<td>{$vo.cTime|date="Y-m-d H:i",###}</td>
+<notempty name="vo.return_good"><td><a href="#" style="color: #ff0000">退换商品</a></td><else/>
+<td>无需退货</td></notempty>
+<notempty name="vo.return_type"><td><a href="#" style="color: #ff0000">换货</a></td><else/>
+<td>退货</td></notempty>
+<td><input type="submit" class="blue small" name="confirmBack" data="{$vo.pid}" onclick="javascript:if(confirm('确实要退货该商品吗?'))confirmReturn(document.getElementById('pid_{$key}').value)" value="确认退货">
+<br />&nbsp;&nbsp;
+<input type="submit" class="blue small" name="cancelBack" value="取消退货"/></td>
+</tr>
+</foreach>
+</tbody>
+</notempty>
+</table>
+</div>
+<div class="xline"></div>
+</div>
+</body>
+</html>

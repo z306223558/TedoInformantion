@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link type="text/css" rel="stylesheet" href="__PUBLIC__/Admin/Css/style.css"/>
+    <link type="text/css" rel="stylesheet" href="__PUBLIC__/Admin/Css/selectOrder.css"/>
+<title>无标题文档</title>
+<style type="text/css">
+</style>
+</head>
+
+<body>
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="/index.php/Shop/Index/index.html">首页</a></li>
+        <li><a href="#">添加快递单号</a></li>
+    </ul>
+</div>
+<div class="mainindex">
+<div class="welinfo">
+<div class="newAdd">
+<form action="/index.php/Shop/Order/addPostNum" method="post">
+    <input type="hidden" name="type" value="0">
+    <h1 style="color: green">新发货请在此输入</h1>
+<b>请输入需要发货的类型：</b>
+    <select name="type_new" style="height: 20px;">
+        <option value="num" selected>编号</option>
+        <option value ="id">订单号</option>
+    </select>
+    <notempty name="id"><input type="text" name="info_new" class="select_id" value="{$id}" maxlength="20"><br />
+    <else/><input type="text" name="info_new" class="select_id"  maxlength="20"><br /></notempty>
+ <b>请输入快递单号：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
+<input type="text" name="post_new" class="select_id" maxlength="20">
+<input class="blue small" type="submit" name="btn" value="确认输入">
+</form>
+    </div>
+    <div style="clear:both"></div>
+    <div class="xline"></div>
+    <div class="newAdd">
+        <form action="/index.php/Shop/Order/addPostNum" method="post">
+            <input type="hidden" name="type" value="1">
+        <h1 style="color: #ff0000">修改已发货订单请在此输入</h1>
+        <b>请输入需要发货的类型：</b>
+        <select name="type_update" style="height: 20px;">
+            <option value="num" selected>编号</option>
+            <option value ="id">订单号</option>
+        </select>
+        <input type="text" name="info_update" class="select_id" maxlength="20"><br />
+        <b>请输入快递单号：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
+        <input type="text" name="post_update" class="select_id" maxlength="20">
+        <input  class="blue small" type="submit" name="btn" value="确认输入">
+        </form>
+        </div>
+</div>
+    <div style="clear:both"></div>
+    <div class="xline"></div>
+    </div>
+</body>
+</html>

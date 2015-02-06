@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+<title>无标题文档</title>
+<link type="text/css" rel="stylesheet" href="__PUBLIC__/Admin/Css/style.css"/>
+<script type="text/javascript" src="__PUBLIC__/Admin/Js/jquery.js"></script>
+<script type="text/javascript">
+$(function(){	
+	//顶部导航切换
+	$(".nav li a").click(function(){
+		$(".nav li a.selected").removeClass("selected")
+		$(this).addClass("selected");
+	})	
+})	
+</script>
+
+
+</head>
+
+<body style="background:url(/Public/Admin/Images/images/topbg.gif) repeat-x;">
+
+    <div class="topleft">
+    <a href="main.html" target="_parent"><img src="__PUBLIC__/Admin/Images/images/logo.png" title="系统首页" /></a>
+    </div>
+        
+    <ul  class="nav">
+    <li><a href="/index.php/Shop/Order/orderInfo" target="rightFrame" class="selected"><img src="__PUBLIC__/Admin/Images/images/icon01.png" title="所有订单"><h2>订单列表</h2></a></li>
+    <li><a href="__URL__/order/handle/selectOrderInfo" target="rightFrame"><img src="__PUBLIC__/Admin/Images/images/icon02.png" title="订单信息查看" /><h2>订单信息查看</h2></a></li>
+    <li><a href="__URL__/order/handle/addPostNum" target="rightFrame"><img src="__PUBLIC__/Admin/Images/images/icon03.png" title="快递单号录入" /><h2>快递单号录入</h2></a></li>
+    <li><a href="__URL__/order/handle/return"  target="rightFrame"><img src="__PUBLIC__/Admin/Images/images/icon04.png" title="退货管理" /><h2>退货管理</h2></a></li>
+    </ul>
+            
+    <div class="topright">    
+    <ul>
+    <li><span><img src="__PUBLIC__/Admin/Images/images/help.png" title="帮助"  class="helpimg"/></span><a href="#">帮助</a></li>
+    <li><a href="#">关于</a></li>
+    <li><a href="__URL__/logout" target="_parent">退出</a></li>
+    </ul>
+     
+    <div class="user">
+    <span>{$username}</span>
+    </div>    
+    
+    </div>
+
+</body>
+</html>

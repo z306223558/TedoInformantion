@@ -1,0 +1,7 @@
+# Created by .gitignore support plugin (hsz.mobi)
+Api/Common/Conf/config.php
+Application/Common/Conf/config.php
+.idea
+log1.txt
+Application/Runtime
+Api/Runtime

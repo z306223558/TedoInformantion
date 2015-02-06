@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>发货订单管理</title>
+    <link type="text/css" rel="stylesheet" href="__PUBLIC__/Admin/Css/style.css" />
+    <link type="text/css" rel="stylesheet" href="__PUBLIC__/Admin/Css/kkpager.css" />
+    <load href="__PUBLIC__/Admin/Css/page.css" />
+    <link type="text/css" rel="stylesheet" href="__PUBLIC__/Admin/Css/selectOrder.css"/>
+    <script type="text/javascript" src="__PUBLIC__/Admin/Js/jquery.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/Js/kkpager.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/Js/easydialog.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="__PUBLIC__/Admin/Css/easydialog.css"/>
+    <script type="text/javascript" src="__PUBLIC__/Admin/Js/selectOrder.js"></script>
+</head>
+<body>
+
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="/index.php/Shop/Index/index.html">首页</a></li>
+        <li><a href="#">订单详情</a></li>
+    </ul>
+</div>
+
+<div class="rightinfo">
+
+    <div class="tools">
+
+        <form action="__URL__/searchOrder" method="get" name="searchForm">
+            <ul>
+            <li style="color: green">请输入查询信息：
+            <select name="type"  class="btn-select">
+                <option value="0" selected>编号</option>
+                <option value ="9">订单号</option>
+                <option value="1">确认照片</option>
+                <option value="2">建模</option>
+                <option value="4">已发货</option>
+                <option value="3">照片驳回</option>
+            </select>
+            <input class="select_id" type="text" name="search" value="" maxlength="20">
+            <input type="submit" class="blue small" value="确认搜索"/>
+            </li>
+            </ul>
+        </form>
+
+    </div>
+
+
+    <table class="tablelist">
+        <thead>
+        <tr>
+            <th width="2%"><input name="" type="checkbox" value="" checked="checked"/></th>
+            <th  width="3%">编号<i class="sort"><img src="__PUBLIC__/Admin/Images/images/px.gif" /></i></th>
+            <th width="10%">订单号</th>
+            <th  width="10%">下单时间</th>
+            <th  width="20%">订单状态</th>
+            <th  width="5%">发货状态</th>
+            <th  width="5%">退货状态</th>
+            <th  width="19%">预计状态和剩余时间</th>
+            <th  width="10%">快递单号</th>
+            <th  width="20%">相关操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="data" item="vo" key="ke">
+            <input type="hidden" id="type_{$vo.id}" value="{$vo.posted}"/>
+            <notempty name="vo.class_type"><tr class="table_gray"><else/><tr></notempty>
+            <td><input name="" type="checkbox" value="{$vo.orderId}" /></td>
+            <td>{$vo.id}</td>
+            <td>{$vo.num}</td>
+            <td>{$vo.cTime|date="Y-m-d H:i",###}</td>
+            <td><b>状态：</b><label style="color: #ff0000">{$vo.status}</label>&nbsp;&nbsp;<b>状态时间：</b>
+            <notempty name="vo.status_time"><b>{$vo.status_time|date="Y-m-d H:i",###}</b><else/><b>{$vo.cTime|date="Y-m-d H:i",###}</b></notempty></td>
+            <notempty name="vo.posted"><td>已发货</td><else/><td style="color: #ff0000">未发货</td></notempty>
+            <notempty name="vo.return_status"><td style="color: #ff0000">退货中</td><else/><td>正常</td></notempty>
+            <td>预计状态：<b style="color: green;">{$vo.would_status}</b>&nbsp;&nbsp;剩余时间：{$vo.last_time}</td>
+            <td>{$vo.num_info}</td>
+            <td><notempty name="vo.posted">
+                <a class="blue small" id = "change_{$vo.id}" href="javascript:" onclick="changePostNum('{$vo.id}')">修改</a>&nbsp;&nbsp;
+                <a class="blue small" id = "return_{$vo.id}" href="__URL__/returnOrder/id/{$vo.id}/type/3/">退货</a>
+                <else/><a class="blue small" id="add_{$vo.id}" href="javascript:" onclick="sendGood('{$vo.id}')">发货</a></notempty>
+                &nbsp;<a class="blue small" href="__URL__/showOrderInfo/id/{$vo.id}">查看详情</a>
+            </td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+    <div class="yahoo2">{$page}<div/>
+
+        <div class="tip">
+            <div class="tiptop"><span>提示信息</span><a></a></div>
+
+            <div class="tipinfo">
+                <span><img src="__PUBLIC__/Admin/Images/images/ticon.png" /></span>
+                <div class="tipright">
+                    <p>是否确认对信息的修改 ？</p>
+                    <cite>如果是请点击确定按钮 ，否则请点取消。</cite>
+                </div>
+            </div>
+
+            <div class="tipbtn">
+                <input name="" type="button"  class="sure" value="确定" />&nbsp;
+                <input name="" type="button"  class="cancel" value="取消" />
+            </div>
+
+        </div>
+
+    </div>
+    <!--隐藏的div，随意修改-->
+    <div class="easyDialog_wrapper" id="easyDialogWrapper" >
+        <div class="easyDialog_content">
+            <h4 class="easyDialog_title" id="easyDialogTitle">
+                <a href="javascript:void(0)" title="关闭窗口" class="close_btn" id="closeBtn">&times;</a>
+                订单操作
+            </h4>
+            <form action="/index.php/Shop/Order/addPostNum" method="post" id="addPostInfoForm">
+                <input type="hidden" name="orderId" id="orderId" value="{$order.orderId}"/>
+                <span style="color: green; margin: 5px;">在此输入快递单号</span>
+                <notempty name="order.posted"><input type="hidden" id="type" name="type"  value="1">
+                    <else/><input type="hidden" name="type" id="type" value="0"></notempty>
+                <input type="text" class="select_id" name="post" id="post"  maxlength="20">
+            </form>
+            <div style="clear: both; height: 20px;"></div>
+            <div class="easyDialog_footer">
+                <button class="btn_normal" id="easyDialogNoBtn" onclick="easyDialog.close()">取消</button>
+                <button class="btn_highlight" onclick="change()" id="easyDialogYesBtn">确定</button>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>
